@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault
+  labels:
+    app: vault
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault
+  template:
+    metadata:
+      labels:
+        app: vault
+        app.kubernetes.io/name: vault
+    spec:
+      containers:
+        - name: vault
+          image: vault:1.13.2
+          env:
+            - name: VAULT_ADDR
+              value: "http://0.0.0.0:8200"
+            - name: VAULT_DEV_ROOT_TOKEN_ID
+              value: "root"
+            - name: SKIP_CHOWN
+              value: "true"
+            - name: SKIP_SETCAP
+              value: "true"
+          ports:
+            - containerPort: 8200
+
+---
+# http://vault.default.svc.cluster.local:8200
+apiVersion: v1
+kind: Service
+metadata:
+  name: vault
+spec:
+  selector:
+    app.kubernetes.io/name: vault
+  ports:
+    - protocol: TCP
+      port: 8200
+      targetPort: 8200

@@ -1,0 +1,27 @@
+global:
+  enabled: true
+  externalVaultAddr: http://vault.default.svc.cluster.local:8200
+
+injector:
+  enabled: true
+  replicas: 2
+
+  # Mount Path of the Vault Kubernetes Auth Method.
+  authPath: "auth/kubernetes"
+
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "1.2.1"
+
+  agentImage:
+    repository: "hashicorp/vault"
+    tag: "1.13.2"
+
+  agentDefaults:
+    cpuLimit: "50m"
+    cpuRequest: "50m"
+    memLimit: "64Mi"
+    memRequest: "64Mi"
+
+server:
+  enabled: false
